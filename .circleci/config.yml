@@ -70,11 +70,19 @@ jobs:
           command: |
             IMAGE_NAME="$CI_REGISTRY_IMAGE/$(echo "<< parameters.service_name >>" | tr '[:upper:]' '[:lower:]')"
             TAG=$(echo "$CIRCLE_SHA1" | cut -c1-7)
+            ENV_TAG=$(echo $CIRCLE_BRANCH | sed 's/main/prod/')
+
             echo "Building $IMAGE_NAME:$TAG ..."
             docker build -t $IMAGE_NAME:$TAG << parameters.service_path >>
-            docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
+
+            echo "Tagging $IMAGE_NAME:$ENV_TAG (environment latest)..."
+            docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:$ENV_TAG
+
+            echo "Pushing images to registry..."
             docker push $IMAGE_NAME:$TAG
-            docker push $IMAGE_NAME:latest
+            docker push $IMAGE_NAME:$ENV_TAG
+
+            echo "✅ Successfully built & pushed: $IMAGE_NAME:$TAG and $IMAGE_NAME:$ENV_TAG"
             
       # - run:
       #     name: DockerHub Login
