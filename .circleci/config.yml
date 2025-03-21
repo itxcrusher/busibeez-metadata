@@ -30,6 +30,9 @@ jobs:
             echo "$CHANGED_FILES" | grep -oE '^SOCKETS/[^/]+' | sort -u | cut -d'/' -f2 > changed_sockets.txt || true
 
             echo "✅ Detected changes stored in txt files."
+            echo "Changed APIs: $(cat changed_apis.txt)"
+            echo "Changed JOBS: $(cat changed_jobs.txt)"
+            echo "Changed SOCKETS: $(cat changed_sockets.txt)"
 
       - persist_to_workspace:
           root: .
