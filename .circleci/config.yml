@@ -17,23 +17,30 @@ jobs:
       - run:
           name: Detect Changed Services
           command: |
+            # Fetch remote branch history
             git fetch --depth=50 origin $CIRCLE_BRANCH
-            CHANGED_FILES=$(git diff --name-only origin/$CIRCLE_BRANCH...HEAD)
+            
+            # Compare the last commit against its parent
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+            
+            echo "Changed files in the last commit:"
+            echo "$CHANGED_FILES"
+            echo ""
 
             echo "Detecting changed APIs..."
-            echo "$CHANGED_FILES" | grep -oE '^API/[^/]+' | sort -u | cut -d'/' -f2 > changed_apis.txt || true
+            # Here we simply check if any file under API/ changed.
+            echo "$CHANGED_FILES" | grep '^API/' > changed_apis.txt || true
 
             echo "Detecting changed JOBS..."
-            echo "$CHANGED_FILES" | grep -oE '^JOBS/[^/]+' | sort -u | cut -d'/' -f2 > changed_jobs.txt || true
+            echo "$CHANGED_FILES" | grep '^JOBS/' > changed_jobs.txt || true
 
             echo "Detecting changed SOCKETS..."
-            echo "$CHANGED_FILES" | grep -oE '^SOCKETS/[^/]+' | sort -u | cut -d'/' -f2 > changed_sockets.txt || true
+            echo "$CHANGED_FILES" | grep '^SOCKETS/' > changed_sockets.txt || true
 
             echo "✅ Detected changes stored in txt files."
             echo "Changed APIs: $(cat changed_apis.txt)"
             echo "Changed JOBS: $(cat changed_jobs.txt)"
             echo "Changed SOCKETS: $(cat changed_sockets.txt)"
-
       - persist_to_workspace:
           root: .
           paths:
