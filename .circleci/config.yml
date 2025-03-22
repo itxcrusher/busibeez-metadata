@@ -28,14 +28,13 @@ jobs:
             echo ""
 
             echo "Detecting changed APIs..."
-            # Here we simply check if any file under API/ changed.
-            echo "$CHANGED_FILES" | grep '^API/' > changed_apis.txt || true
+            echo "$CHANGED_FILES" | grep '^API/' | awk -F'/' '{print $2}' | sort -u > changed_apis.txt || true
 
             echo "Detecting changed JOBS..."
-            echo "$CHANGED_FILES" | grep '^JOBS/' > changed_jobs.txt || true
+            echo "$CHANGED_FILES" | grep '^JOBS/' | awk -F'/' '{print $2}' | sort -u > changed_jobs.txt || true
 
             echo "Detecting changed SOCKETS..."
-            echo "$CHANGED_FILES" | grep '^SOCKETS/' > changed_sockets.txt || true
+            echo "$CHANGED_FILES" | grep '^SOCKETS/' | awk -F'/' '{print $2}' | sort -u > changed_sockets.txt || true
 
             echo "✅ Detected changes stored in txt files."
             echo "Changed APIs: $(cat changed_apis.txt)"
