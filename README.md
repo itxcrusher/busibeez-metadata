@@ -1,3 +1,6 @@
+# GitOps Metadata Repository
+
+<!--
 # 🚀 Busibeez Application Repository
 
 Contains source code for Busibeez APIs, JOBS, SOCKETS, and related services.
@@ -12,3 +15,4 @@ Instructions on how to set up the local development environment.
 
 ## CI/CD
 CircleCI pipeline for building and pushing Docker images.
+-->
